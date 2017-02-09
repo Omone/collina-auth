@@ -4,7 +4,10 @@
   "description": "Modulo di autenticazione Utenti",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run-script mocha && npm run-script lint",
+    "coverage": "istanbul cover _mocha -- --timeout 30000 test --report HTML",
+    "lint": "eslint . ",
+    "mocha": "mocha --timeout 20000 --recursive test/"
   },
   "repository": {
     "type": "git",
@@ -18,5 +21,10 @@
   "homepage": "https://github.com/Omone/collina-auth#readme",
   "dependencies": {
     "levelup": "^1.3.3"
+  },
+  "devDependencies": {
+    "eslint": "^3.15.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.2.0"
   }
 }
