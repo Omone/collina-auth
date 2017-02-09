@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npm run-script mocha && npm run-script lint",
     "coverage": "istanbul cover _mocha -- --timeout 30000 test --report HTML",
-    "lint": "eslint . ",
+    "lint": "standard .",
     "mocha": "mocha --timeout 20000 --recursive test/"
   },
   "repository": {
@@ -25,6 +25,7 @@
   "devDependencies": {
     "eslint": "^3.15.0",
     "istanbul": "^0.4.5",
-    "mocha": "^3.2.0"
+    "mocha": "^3.2.0",
+    "standard": "^9.0.0-beta.0"
   }
 }
