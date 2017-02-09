@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Omone/collina-auth/issues"
   },
-  "homepage": "https://github.com/Omone/collina-auth#readme"
+  "homepage": "https://github.com/Omone/collina-auth#readme",
+  "dependencies": {
+    "levelup": "^1.3.3"
+  }
 }
