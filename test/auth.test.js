@@ -134,7 +134,7 @@ describe('library', function () {
     })
   })
 
-  describe.only('stream', function () {
+  describe('stream', function () {
     describe('writeable', function () {
       let rs
       before(function () {
