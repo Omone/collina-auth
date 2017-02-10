@@ -3,6 +3,7 @@
 const levelup = require('level')
 const Joi = require('joi')
 const crypto = require('crypto')
+const Writable = require('stream').Writable
 
 var userSchema = Joi.object().keys({
   username: Joi.string().alphanum().min(3).max(30).required(),
@@ -68,6 +69,14 @@ Auth.prototype.fetchDetails = function (username, cb) {
 
 Auth.prototype.close = function (cb) {
   this.db.close(cb)
+}
+
+Auth.prototype.createWritableStream = function () {
+  const ws = new Writable({ objectMode: true })
+  ws._write = function (user, enc, next) {
+    this.addUser(user, next)
+  }.bind(this)
+  return ws
 }
 
 module.exports = function AuthBuilder (conf) {
