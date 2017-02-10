@@ -39,15 +39,35 @@ $ npm install collina-auth
 All operations are asynchronous although they don't necessarily require a callback if you don't need to know when the operation was performed.
 
 ```js
-var auth = require('collina-auth')
+const user = {
+    username: 'foo',
+    password: 'password',
+    details: {
+      a: 'b',
+      c: 'd',
+    },
+  }
+let conf = {
+    dbname: 'bar'
+  }
+var auth = require('collina-auth')(conf)
 
-// 1) Add user, supply .
+// 1) Add user, supply details.
 //    This will create user on  the underlying store.
-var user = auth.addUser()
-
-// 2) put a key & value
-var details = user.fetchDetails('name', function (err) {
-
+auth.addUser(user, function(err) {
+	if(err) /*!!!*/ return
+	//.. do stuff
+})
+// 2) Fetch User details
+auth.fetchDetails('foo', function(err, details) {
+	if(err) /*!!!*/ return
+		//.. do stuff with details
+	})
+})
+// 3) Validate credentials
+auth.authenticate(user.username, 'password', function(err){
+	if(err) /*!!!*/ return
+		//.. do stuff
 })
 ```
 
