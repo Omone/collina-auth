@@ -1,6 +1,6 @@
 {
   "name": "@alessandro.castrucci/collina-auth",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Modulo di autenticazione Utenti",
   "main": "index.js",
   "scripts": {
