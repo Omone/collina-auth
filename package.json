@@ -1,12 +1,13 @@
 {
   "name": "@alessandro.castrucci/collina-auth",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Modulo di autenticazione Utenti",
   "main": "index.js",
   "scripts": {
     "test": "npm run-script mocha && npm run-script lint",
     "coverage": "istanbul cover _mocha -- --timeout 30000 test --report HTML",
     "lint": "standard",
+    "fix-lint": "standard --fix",
     "mocha": "mocha --timeout 20000 --recursive test/"
   },
   "repository": {
@@ -29,6 +30,7 @@
     "fs": "0.0.1-security",
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
+    "path": "^0.12.7",
     "standard": "^9.0.0-beta.0"
   }
 }

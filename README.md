@@ -55,28 +55,21 @@ var auth = require('collina-auth')(conf)
 // 1) Add user, supply details.
 //    This will create user on  the underlying store.
 auth.addUser(user, function(err) {
-	if(err) /*!!!*/ return
+	if(err) /*handle!!!*/ return
 	//.. do stuff
 })
 // 2) Fetch User details
 auth.fetchDetails('foo', function(err, details) {
-	if(err) /*!!!*/ return
+	if(err) /*handle!!!*/ return
 		//.. do stuff with details
 	})
 })
 // 3) Validate credentials
-auth.authenticate(user.username, 'password', function(err){
-	if(err) /*!!!*/ return
+auth.authenticate('foo', 'password', function(err){
+	if(err) /*handle!!!*/ return
 		//.. do stuff
 })
 ```
 
-<a name="api"></a>
-## API
-
-  * <a href="#ctor"><code><b>collina-auth()</b></code></a>
-  * <a href="#user"><code>auth.<b>addUser()</b></code></a>
-  * <a href="#fetchDetails"><code>user.<b>fetchDetails()</b></code></a>
-  * <a href="#authenticate"><code>user.<b>authenticate()</b></code></a>
 
 
