@@ -1,6 +1,23 @@
 const assert = require('assert')
 
 const AuthBuilder = require('../index.js')
+let oldGenerateHash
+
+var fs = require('fs');
+var deleteFolderRecursive = function(path) {
+  if( fs.existsSync(path) ) {
+    fs.readdirSync(path).forEach(function(file,index){
+      var curPath = path + "/" + file;
+      if(fs.lstatSync(curPath).isDirectory()) { // recurse
+        deleteFolderRecursive(curPath);
+      } else { // delete file
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(path);
+  }
+};
+
 
 describe('require library', function () {
   let auth
@@ -9,7 +26,7 @@ describe('require library', function () {
   }
   const user = {
     username: 'foo',
-    secret: 'password',
+    password: 'password',
     details: {
       a: 'b',
       c: 'd',
@@ -18,9 +35,13 @@ describe('require library', function () {
 
   beforeEach(function() {
     auth = AuthBuilder(conf)
+    oldGenerateHash = auth.generateHash
   })
   afterEach(function (done) {
-    require('leveldown').destroy(conf.dbname, done)
+    auth.close(function () {
+      deleteFolderRecursive(__dirname + '/../bar')
+      done()
+    })
   })
 
   describe('should return an instance of auth', function () {
@@ -33,17 +54,14 @@ describe('require library', function () {
 
     describe('Adding user', function () {
       it('should add an user', function (done) {
-        auth.addUser(user, function(err, stored) {
+        auth.addUser(user, function(err) {
           assert.ifError(err)
-
-          delete stored.id
-          assert.deepEqual(stored, user)
           done()
         })
       })
 
       it('should not add an existing user', function (done) {
-        auth.addUser(user, function(err, stored) {
+        auth.addUser(user, function(err) {
           auth.addUser(user, function(err) {
             assert.ok(err)
             done()
@@ -55,7 +73,7 @@ describe('require library', function () {
 
     describe('fetch Details', function () {
       it('should fetch details', function (done) {
-        auth.addUser(user, function(err, stored) {
+        auth.addUser(user, function(err) {
           auth.fetchDetails(user.username, function(err, details) {
             assert.ifError(err)
 
@@ -66,7 +84,7 @@ describe('require library', function () {
       })
 
       it('should not fetch details if user unkonwn', function (done) {
-        auth.fetchDetails(user.username, function(err, details) {
+        auth.fetchDetails('aaaa', function(err, details) {
           assert.ok(err)
           done()
         })
@@ -74,13 +92,12 @@ describe('require library', function () {
     })
 
     describe('authentication', function () {
-      before(function () {
-        const oldGenerateHash = auth.generateHash
-        auth.generateHash = function(ddd) {
+      beforeEach(function () {
+        auth.generateHash = function() {
           return 'password'
         }
       })
-      after(function (done) {
+      afterEach(function () {
         auth.generateHash = oldGenerateHash
       })
 
@@ -94,6 +111,7 @@ describe('require library', function () {
       })
 
       it('should fail authentication if password is wrong', function (done) {
+        auth.generateHash = oldGenerateHash
         auth.addUser(user, function(err, stored) {
           auth.authenticate(user.username, 'anotherOne', function(err){
             assert.ok(err)
