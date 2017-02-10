@@ -1,5 +1,6 @@
 /* eslint-env mocha */
 const assert = require('assert')
+const pump = require('pump')
 const fs = require('fs')
 const Readable = require('stream').Readable
 
@@ -136,10 +137,10 @@ describe('library', function () {
   describe.only('stream', function () {
     describe('writeable', function () {
       let rs
-      before(function() {
+      before(function () {
         rs = new Readable({ objectMode: true })
-        rs._read = function() {
-          setTimeout(function(){
+        rs._read = function () {
+          setTimeout(function () {
             rs.push(user)
             rs.push(null)
           }, 100)
@@ -147,15 +148,15 @@ describe('library', function () {
       })
       it('should find user', function (done) {
         let ws = auth.createWritableStream()
-        rs.pipe(ws)
-        setTimeout(function(){
+        pump(rs, ws, function (err) {
+          assert.ifError(err)
           auth.fetchDetails(user.username, function (err, details) {
             assert.ifError(err)
 
             assert.deepEqual(user.details, details)
             done()
           })
-        }, 200)
+        })
       })
     })
   })
